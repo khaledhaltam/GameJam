@@ -11,8 +11,7 @@ namespace Platformer
         private float moveInput;
 
         private bool facingRight = false;
-        [HideInInspector]
-        public bool deathState = false;
+        [HideInInspector] public bool deathState = false;
 
         private bool isGrounded;
         public Transform groundCheck;
@@ -35,28 +34,31 @@ namespace Platformer
 
         void Update()
         {
-            if (Input.GetButton("Horizontal")) 
+            if (Input.GetButton("Horizontal"))
             {
                 moveInput = Input.GetAxis("Horizontal");
                 Vector3 direction = transform.right * moveInput;
-                transform.position = Vector3.MoveTowards(transform.position, transform.position + direction, movingSpeed * Time.deltaTime);
+                transform.position = Vector3.MoveTowards(transform.position, transform.position + direction,
+                    movingSpeed * Time.deltaTime);
                 animator.SetInteger("playerState", 1); // Turn on run animation
             }
             else
             {
                 if (isGrounded) animator.SetInteger("playerState", 0); // Turn on idle animation
             }
-            if(Input.GetKeyDown(KeyCode.Space) && isGrounded )
-            {
-                rigidbody.AddForce(transform.up * jumpForce, ForceMode2D.Impulse);
-            }
-            if (!isGrounded)animator.SetInteger("playerState", 2); // Turn on jump animation
 
-            if(facingRight == false && moveInput > 0)
+            if (Input.GetKey(KeyCode.Space)) //&&isGrounded deleted
+            {
+                rigidbody.AddForce(transform.up * jumpForce);
+            }
+
+            if (!isGrounded) animator.SetInteger("playerState", 2); // Turn on jump animation
+
+            if (facingRight == false && moveInput > 0)
             {
                 Flip();
             }
-            else if(facingRight == true && moveInput < 0)
+            else if (facingRight == true && moveInput < 0)
             {
                 Flip();
             }
