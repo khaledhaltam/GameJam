@@ -4,13 +4,7 @@ using UnityEngine;
 
 public class WallScript : MonoBehaviour
 {
-    public float speed = 1.0f;
-    private BoxCollider2D boxCollider;
-
-    private void Start()
-    {
-        boxCollider = GetComponent<BoxCollider2D>();
-    }
+    public float speed = 10.0f;
 
     // Update is called once per frame
     void Update()
@@ -19,8 +13,7 @@ public class WallScript : MonoBehaviour
 
         if (transform.position.x <= -18)
         {
-            print(">-18");
-            transform.position = new Vector3(transform.position.x + 2 * 18, transform.position.y, transform.position.z);
+            transform.position = new Vector3(transform.position.x + 2 * 27, transform.position.y, transform.position.z);
         }
     }
 }

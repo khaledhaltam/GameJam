@@ -8,9 +8,7 @@ namespace Platformer
     {
         public float movingSpeed;
         public float jumpForce;
-        private float moveInput;
 
-        private bool facingRight = false;
         [HideInInspector] public bool deathState = false;
 
         private bool isGrounded;
@@ -19,12 +17,13 @@ namespace Platformer
         private Rigidbody2D rigidbody;
         private Animator animator;
         private GameManager gameManager;
+        private int coins;
 
         void Start()
         {
             rigidbody = GetComponent<Rigidbody2D>();
             animator = GetComponent<Animator>();
-            gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+            //gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         }
 
         private void FixedUpdate()
@@ -34,44 +33,14 @@ namespace Platformer
 
         void Update()
         {
-            if (Input.GetButton("Horizontal"))
-            {
-                moveInput = Input.GetAxis("Horizontal");
-                Vector3 direction = transform.right * moveInput;
-                transform.position = Vector3.MoveTowards(transform.position, transform.position + direction,
-                    movingSpeed * Time.deltaTime);
-                animator.SetInteger("playerState", 1); // Turn on run animation
-            }
-            else
-            {
-                if (isGrounded) animator.SetInteger("playerState", 0); // Turn on idle animation
-            }
-
             if (Input.GetKey(KeyCode.Space)) //&&isGrounded deleted
             {
                 rigidbody.AddForce(transform.up * jumpForce);
             }
-
-            if (!isGrounded) animator.SetInteger("playerState", 2); // Turn on jump animation
-
-            if (facingRight == false && moveInput > 0)
-            {
-                Flip();
-            }
-            else if (facingRight == true && moveInput < 0)
-            {
-                Flip();
-            }
+            if (!isGrounded) animator.SetBool("isJumping", false); // Turn on jump animation
         }
 
-        private void Flip()
-        {
-            facingRight = !facingRight;
-            Vector3 Scaler = transform.localScale;
-            Scaler.x *= -1;
-            transform.localScale = Scaler;
-        }
-
+        
         private void CheckGround()
         {
             Collider2D[] colliders = Physics2D.OverlapCircleAll(groundCheck.transform.position, 0.2f);
@@ -89,13 +58,21 @@ namespace Platformer
                 deathState = false;
             }
         }
-
-        private void OnTriggerEnter2D(Collider2D other)
+        
+        private void OnTriggerEnter2D(Collider2D collision)
         {
-            if (other.gameObject.tag == "Coin")
+            if (collision.CompareTag("Coin"))
             {
-                gameManager.coinsCounter += 1;
-                Destroy(other.gameObject);
+                Destroy(collision.gameObject);
+                coins++;
+            }
+
+            if (collision.CompareTag("Spike"))
+            {
+                print("HIT SPIKE");
+                //menu.SetActive(true);
+                //condition.text = "You Lose!";
+                //transform.position = new Vector2(-1f, 6f);
             }
         }
     }
