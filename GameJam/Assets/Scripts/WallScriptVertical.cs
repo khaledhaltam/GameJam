@@ -14,7 +14,7 @@ public class WallScriptVertical : MonoBehaviour
 
         if (transform.position.x <= -3)
         {
-            float newYPos = Random.Range(-6, 3);
+            float newYPos = Random.Range(0, 9);
             transform.position = new Vector3(transform.position.x + 2 * 18, newYPos, transform.position.z);
         }
     }

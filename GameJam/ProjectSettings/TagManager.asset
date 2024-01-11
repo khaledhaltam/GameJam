@@ -7,6 +7,9 @@ TagManager:
   - Enemy
   - Spike
   - Startmenu
+  - Coin
+  - GameOverScreen
+  - Startmenu
   layers:
   - Default
   - TransparentFX
@@ -14,7 +17,7 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - Ground
   - 
   - 
   - 

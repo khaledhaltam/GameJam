@@ -12,8 +12,10 @@ namespace Platformer
         [HideInInspector] public bool deathState = false;
 
         private bool isGrounded;
-        public Transform groundCheck;
-
+        public LayerMask whatIsGround;
+        public Transform feetPos;
+        public float radius;
+        
         private Rigidbody2D rigidbody;
         private Animator animator;
         private GameManager gameManager;
@@ -26,6 +28,7 @@ namespace Platformer
 
         void Start()
         {
+            Time.timeScale = 0;
             gameoverScreen.SetActive(false);
 
             rigidbody = GetComponent<Rigidbody2D>();
@@ -39,20 +42,30 @@ namespace Platformer
 
         void Update()
         {
+            // Player Jump
+            if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+            {
+                rigidbody.velocity = Vector2.up * jumpForce;
+            }
+            
+            //Player Animation
+            animator.SetBool("isJumping", !isGrounded);
+            
+            isGrounded = Physics2D.OverlapCircle(feetPos.position, radius, whatIsGround);
+
+            
             if (Input.GetKey(KeyCode.Space)) //&&isGrounded deleted
             {
                 rigidbody.AddForce(transform.up * jumpForce);
             }
 
             //if (!isGrounded) animator.SetBool("isJumping", true); // Turn on jump animation
-            //else animator.SetBool("isJumping", false); // Turn off jump animation
+            else animator.SetBool("isJumping", false); // Turn off jump animation
         }
-
 
         private void CheckGround()
         {
-            Collider2D[] colliders = Physics2D.OverlapCircleAll(groundCheck.transform.position, 0.2f);
-            isGrounded = colliders.Length > 1;
+            isGrounded = Physics2D.OverlapCircle(feetPos.transform.position, 0.2f, whatIsGround);
         }
 
         private void OnCollisionEnter2D(Collision2D other)
@@ -81,6 +94,7 @@ namespace Platformer
             {
                 print("HIT SPIKE");
                 gameoverScreen.SetActive(true);
+                Time.timeScale = 0;
                 //condition.text = "You Lose!";
                 //transform.position = new Vector2(-1f, 6f);
             }
@@ -91,6 +105,7 @@ namespace Platformer
             startmenu = GameObject.FindGameObjectWithTag("Startmenu");
             Debug.Log("Start");
             startmenu.SetActive(false);
+            Time.timeScale = 1;
         }
 
         public void Restart()
@@ -98,6 +113,7 @@ namespace Platformer
             gameoverScreen = GameObject.FindGameObjectWithTag("GameOverScreen");
             Debug.Log("Restart");
             gameoverScreen.SetActive(false);
+            Time.timeScale = 1;
         }
     }
 }
