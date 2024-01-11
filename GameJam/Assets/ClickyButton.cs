@@ -11,6 +11,7 @@ public class ClickyButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     [SerializeField] private Sprite _default, _pressed;
     [SerializeField] private AudioClip _compressClip, _uncrompressClip;
     [SerializeField] private AudioSource _source;
+
     
     public void OnPointerDown(PointerEventData eventData)
     {
