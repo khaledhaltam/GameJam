@@ -23,7 +23,6 @@ namespace Platformer
 
         public GameObject startmenu;
         public GameObject gameoverScreen;
-        public GameObject playScreen;
 
 
         void Start()
