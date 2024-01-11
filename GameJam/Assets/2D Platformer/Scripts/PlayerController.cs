@@ -42,16 +42,19 @@ namespace Platformer
         void Update()
         {
             // Player Jump
-            if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+            if (Input.GetKey(KeyCode.Space))
             {
-                rigidbody.velocity = Vector2.up * jumpForce;
+                rigidbody.velocity = new Vector2(rigidbody.velocity.x, jumpForce);
             }
-            
+            else if (Input.GetKeyUp(KeyCode.Space))
+            {
+                rigidbody.velocity = new Vector2(rigidbody.velocity.x, 0);
+            }
+
             //Player Animation
             animator.SetBool("isJumping", !isGrounded);
-            
-            isGrounded = Physics2D.OverlapCircle(feetPos.position, radius, whatIsGround);
 
+            isGrounded = Physics2D.OverlapCircle(feetPos.position, radius, whatIsGround);
             
             if (Input.GetKey(KeyCode.Space)) //&&isGrounded deleted
             {
