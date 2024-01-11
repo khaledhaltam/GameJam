@@ -44,8 +44,8 @@ namespace Platformer
                 rigidbody.AddForce(transform.up * jumpForce);
             }
 
-            if (!isGrounded) animator.SetBool("isJumping", true); // Turn on jump animation
-            else animator.SetBool("isJumping", false); // Turn off jump animation
+            //if (!isGrounded) animator.SetBool("isJumping", true); // Turn on jump animation
+            //else animator.SetBool("isJumping", false); // Turn off jump animation
         }
 
 
@@ -84,6 +84,13 @@ namespace Platformer
                 //condition.text = "You Lose!";
                 //transform.position = new Vector2(-1f, 6f);
             }
+        }
+        
+        public void StartGame()
+        {
+            startmenu = GameObject.FindGameObjectWithTag("Startmenu");
+            Debug.Log("Start");
+            startmenu.SetActive(false);
         }
 
         public void Restart()
