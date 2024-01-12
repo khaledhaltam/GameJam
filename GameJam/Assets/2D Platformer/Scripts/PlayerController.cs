@@ -15,7 +15,9 @@ namespace Platformer
         public LayerMask whatIsGround;
         public Transform feetPos;
         public float radius;
-        
+        public float explodeRadius;
+
+
         private Rigidbody2D rigidbody;
         private Animator animator;
         private GameManager gameManager;
@@ -23,6 +25,8 @@ namespace Platformer
 
         public GameObject startmenu;
         public GameObject gameoverScreen;
+        
+        public GameObject enemyPrefab;
 
 
         void Start()
@@ -39,8 +43,25 @@ namespace Platformer
             CheckGround();
         }
 
+        private void SpawnEnemy()
+        {
+            // Definieren Sie die Position, an der Sie die Spikes erstellen möchten
+            Vector3 spawnPosition = new Vector3(26, 0, 0); // Ändern Sie dies entsprechend
+
+            // Erstellen Sie einige Spikes
+            for (int i = 0; i < 5; i++)
+            {
+                // Berechnen Sie die Position für diesen Spike
+                Vector3 position = spawnPosition + new Vector3(0, 2, 0); // Ändern Sie dies entsprechend
+
+                // Instanziieren Sie das Spike-Prefab an der berechneten Position
+                Instantiate(enemyPrefab, position, Quaternion.identity);
+            }
+        }
+
         void Update()
         {
+            
             // Player Jump
             if (Input.GetKey(KeyCode.Space))
             {
@@ -51,11 +72,43 @@ namespace Platformer
                 rigidbody.velocity = new Vector2(rigidbody.velocity.x, 0);
             }
 
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                SpawnEnemy();
+            }
+
+            if (Input.GetKeyDown(KeyCode.B))
+            {
+                // Destroy all spikes in the radius
+                Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, explodeRadius);
+                foreach (Collider2D collider in colliders)
+                {
+                    if (collider.gameObject.CompareTag("Spike"))
+                    {
+                        print("Spike in radius");
+                        Destroy(collider.gameObject);
+                    }
+                }
+
+                // Set Animation
+                animator.SetTrigger("Explode");
+            }
+
             //Player Animation
             animator.SetBool("isJumping", !isGrounded);
 
+            // Falling Animation
+            if (rigidbody.velocity.y < 0)
+            {
+                animator.SetBool("isFalling", true);
+            }
+            else if (isGrounded)
+            {
+                animator.SetBool("isFalling", false);
+            }
+
             isGrounded = Physics2D.OverlapCircle(feetPos.position, radius, whatIsGround);
-            
+
             if (Input.GetKey(KeyCode.Space)) //&&isGrounded deleted
             {
                 rigidbody.AddForce(transform.up * jumpForce);
@@ -101,7 +154,7 @@ namespace Platformer
                 //transform.position = new Vector2(-1f, 6f);
             }
         }
-        
+
         public void StartGame()
         {
             startmenu = GameObject.FindGameObjectWithTag("Startmenu");
