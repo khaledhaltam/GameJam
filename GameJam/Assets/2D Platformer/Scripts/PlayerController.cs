@@ -21,7 +21,7 @@ namespace Platformer
 
         public GameObject startmenu;
         public GameObject gameoverScreen;
-        
+        public GameObject creditScreen; 
         public GameObject enemyPrefab;
 
 
@@ -29,7 +29,7 @@ namespace Platformer
         {
             Time.timeScale = 0;
             gameoverScreen.SetActive(false);
-
+            creditScreen.SetActive(false);
             rigidbody = GetComponent<Rigidbody2D>();
             animator = GetComponent<Animator>();
         }
@@ -149,6 +149,18 @@ namespace Platformer
             startmenu.SetActive(false);
             Time.timeScale = 1;
         }
+
+        public void EnterCredit()
+        {
+            startmenu.SetActive(false);
+            creditScreen.SetActive(true);
+        }
+        public void EscapeCredits()
+        {
+            startmenu.SetActive(true);
+            creditScreen.SetActive(false);
+        }
+
 
         public void Restart()
         {
