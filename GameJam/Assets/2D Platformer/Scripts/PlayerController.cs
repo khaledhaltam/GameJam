@@ -1,4 +1,8 @@
+using System;
+using System.Collections;
+using TMPro;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Platformer
 {
@@ -17,12 +21,15 @@ namespace Platformer
         private Rigidbody2D rigidbody;
         private Animator animator;
         private GameManager gameManager;
-        private int coins;
+        private float Score = 0;
+        public TextMeshProUGUI scoreText;
+
 
         public GameObject startmenu;
         public GameObject gameoverScreen;
-        public GameObject creditScreen; 
+        public GameObject creditScreen;
         public GameObject enemyPrefab;
+        public GameObject spikePrefab;
 
 
         void Start()
@@ -32,6 +39,8 @@ namespace Platformer
             creditScreen.SetActive(false);
             rigidbody = GetComponent<Rigidbody2D>();
             animator = GetComponent<Animator>();
+            SpawnSpike();
+            SpawnEnemy();
         }
 
         private void FixedUpdate()
@@ -39,24 +48,39 @@ namespace Platformer
             CheckGround();
         }
 
+        private void SpawnSpike()
+        {
+            Vector3 spawnPosition = new Vector3(26, Random.Range(-3f, 3f), 0);
+            Instantiate(spikePrefab, spawnPosition, Quaternion.identity);
+        }
+
         private void SpawnEnemy()
         {
-            // Definieren Sie die Position, an der Sie die Spikes erstellen möchten
-            Vector3 spawnPosition = new Vector3(26, 0, 0); // Ändern Sie dies entsprechend
+            Vector3 spawnPosition = new Vector3(26, Random.Range(-3f, 3f), 0);
+            Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
+        }
 
-            // Erstellen Sie einige Spikes
-            for (int i = 0; i < 5; i++)
-            {
-                // Berechnen Sie die Position für diesen Spike
-                Vector3 position = spawnPosition + new Vector3(0, 2, 0); // Ändern Sie dies entsprechend
+        private void KillEnemy(GameObject enemy)
+        {
+            // Calculate the distance between the player and the enemy
+            float distance = Vector3.Distance(transform.position, enemy.transform.position);
 
-                // Instanziieren Sie das Spike-Prefab an der berechneten Position
-                Instantiate(enemyPrefab, position, Quaternion.identity);
-            }
+            // Calculate the score increase. The closer the player is to the enemy, the higher the score.
+            // You can adjust the formula as needed to get the desired score increase.
+            int scoreIncrease = Mathf.RoundToInt(100 / (distance + 1));
+
+            // Increase the score
+            Score += scoreIncrease;
+            print("Score" + Score  +"Score: " + Score.ToString());
+
+            // Destroy the enemy
+            Destroy(enemy);
         }
 
         void Update()
         {
+            // Set Score
+            scoreText.text = "Score: " + Score;
             
             // Player Jump
             if (Input.GetKey(KeyCode.Space))
@@ -68,21 +92,15 @@ namespace Platformer
                 rigidbody.velocity = new Vector2(rigidbody.velocity.x, 0);
             }
 
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                SpawnEnemy();
-            }
-
             if (Input.GetKeyDown(KeyCode.B))
             {
-                // Destroy all spikes in the radius
-                Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 5);
+                // Destroy all enemies in the radius
+                Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 3);
                 foreach (Collider2D collider in colliders)
                 {
                     if (collider.gameObject.CompareTag("Enemy"))
                     {
-                        print("Enemy in radius");
-                        Destroy(collider.gameObject);
+                        KillEnemy(collider.gameObject); // Call the KillEnemy method here
                     }
                 }
 
@@ -112,23 +130,23 @@ namespace Platformer
 
             //if (!isGrounded) animator.SetBool("isJumping", true); // Turn on jump animation
             else animator.SetBool("isJumping", false); // Turn off jump animation
+
+
+            // Check if there are any spikes or enemies left in the game
+            if (GameObject.FindGameObjectsWithTag("Spike").Length == 0)
+            {
+                SpawnSpike();
+            }
+
+            if (GameObject.FindGameObjectsWithTag("Enemy").Length == 0)
+            {
+                SpawnEnemy();
+            }
         }
 
         private void CheckGround()
         {
             isGrounded = Physics2D.OverlapCircle(feetPos.transform.position, 0.2f, whatIsGround);
-        }
-
-        private void OnCollisionEnter2D(Collision2D other)
-        {
-            if (other.gameObject.tag == "Enemy")
-            {
-                deathState = true; // Say to GameManager that player is dead
-            }
-            else
-            {
-                deathState = false;
-            }
         }
 
         private void OnTriggerEnter2D(Collider2D collision)
@@ -137,8 +155,6 @@ namespace Platformer
             {
                 gameoverScreen.SetActive(true);
                 Time.timeScale = 0;
-                //condition.text = "You Lose!";
-                //transform.position = new Vector2(-1f, 6f);
             }
         }
 
@@ -155,15 +171,18 @@ namespace Platformer
             startmenu.SetActive(false);
             creditScreen.SetActive(true);
         }
+
         public void EscapeCredits()
         {
             startmenu.SetActive(true);
             creditScreen.SetActive(false);
         }
+
         public void GoToMenu()
         {
             startmenu.SetActive(true);
             gameoverScreen.SetActive(false);
+            ResetGame();
         }
 
         public void Restart()
@@ -174,7 +193,7 @@ namespace Platformer
             gameoverScreen.SetActive(false);
             Time.timeScale = 1;
         }
-        
+
         public void ResetGame()
         {
             // Destroy all enemys and spikes
@@ -184,11 +203,15 @@ namespace Platformer
             {
                 Destroy(spike);
             }
+
             foreach (GameObject enemy in enemys)
             {
                 Destroy(enemy);
-                
             }
+            
+            Score = 0;
+            SpawnEnemy();
+            SpawnSpike();
         }
     }
 }
