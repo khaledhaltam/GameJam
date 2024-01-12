@@ -71,7 +71,6 @@ namespace Platformer
 
             // Increase the score
             Score += scoreIncrease;
-            print("Score" + Score  +"Score: " + Score.ToString());
 
             // Destroy the enemy
             Destroy(enemy);
