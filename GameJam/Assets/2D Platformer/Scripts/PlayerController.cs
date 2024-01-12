@@ -160,7 +160,11 @@ namespace Platformer
             startmenu.SetActive(true);
             creditScreen.SetActive(false);
         }
-
+        public void GoToMenu()
+        {
+            startmenu.SetActive(true);
+            gameoverScreen.SetActive(false);
+        }
 
         public void Restart()
         {
