@@ -522,10 +522,12 @@ MonoBehaviour:
     m_Bits: 64
   feetPos: {fileID: 1946206446}
   radius: 0
+  scoreText: {fileID: 1015020794}
   startmenu: {fileID: 422453342}
   gameoverScreen: {fileID: 1496716412}
   creditScreen: {fileID: 1042548790}
   enemyPrefab: {fileID: 6776210820464818467, guid: 992fbb907ebd94222b53ec618be8154d, type: 3}
+  spikePrefab: {fileID: 5486097941344555078, guid: d5804150023e445279b99e93405dce83, type: 3}
 --- !u!1 &422453342 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2000903715360362114, guid: 10c792f6926614b999eb3960ddef55ca, type: 3}
