@@ -164,10 +164,27 @@ namespace Platformer
 
         public void Restart()
         {
+            ResetGame();
             gameoverScreen = GameObject.FindGameObjectWithTag("GameOverScreen");
             Debug.Log("Restart");
             gameoverScreen.SetActive(false);
             Time.timeScale = 1;
+        }
+        
+        public void ResetGame()
+        {
+            // Destroy all enemys and spikes
+            GameObject[] spikes = GameObject.FindGameObjectsWithTag("Spike");
+            GameObject[] enemys = GameObject.FindGameObjectsWithTag("Enemy");
+            foreach (GameObject spike in spikes)
+            {
+                Destroy(spike);
+            }
+            foreach (GameObject enemy in enemys)
+            {
+                Destroy(enemy);
+                
+            }
         }
     }
 }
