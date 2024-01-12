@@ -23,6 +23,8 @@ namespace Platformer
         private GameManager gameManager;
         private float Score = 0;
         public TextMeshProUGUI scoreText;
+        public TextMeshProUGUI overScoreText;
+        
 
 
         public GameObject startmenu;
@@ -153,6 +155,7 @@ namespace Platformer
             if (collision.CompareTag("Spike") || collision.CompareTag("Enemy"))
             {
                 gameoverScreen.SetActive(true);
+                overScoreText.text = "Your Score: " + Score;
                 Time.timeScale = 0;
             }
         }

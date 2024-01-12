@@ -523,6 +523,7 @@ MonoBehaviour:
   feetPos: {fileID: 1946206446}
   radius: 0
   scoreText: {fileID: 1015020794}
+  overScoreText: {fileID: 39771984}
   startmenu: {fileID: 422453342}
   gameoverScreen: {fileID: 1496716412}
   creditScreen: {fileID: 1042548790}
@@ -2035,7 +2036,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -859, y: 514.2}
+  m_AnchoredPosition: {x: -853.2, y: 510.7}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1015020794
