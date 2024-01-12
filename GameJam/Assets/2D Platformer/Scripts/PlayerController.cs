@@ -94,7 +94,7 @@ namespace Platformer
             if (Input.GetKeyDown(KeyCode.B))
             {
                 // Destroy all enemies in the radius
-                Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 3);
+                Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 4);
                 foreach (Collider2D collider in colliders)
                 {
                     if (collider.gameObject.CompareTag("Enemy"))
