@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Platformer
@@ -15,8 +13,6 @@ namespace Platformer
         public LayerMask whatIsGround;
         public Transform feetPos;
         public float radius;
-        public float explodeRadius;
-
 
         private Rigidbody2D rigidbody;
         private Animator animator;
@@ -80,12 +76,12 @@ namespace Platformer
             if (Input.GetKeyDown(KeyCode.B))
             {
                 // Destroy all spikes in the radius
-                Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, explodeRadius);
+                Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 5);
                 foreach (Collider2D collider in colliders)
                 {
-                    if (collider.gameObject.CompareTag("Spike"))
+                    if (collider.gameObject.CompareTag("Enemy"))
                     {
-                        print("Spike in radius");
+                        print("Enemy in radius");
                         Destroy(collider.gameObject);
                     }
                 }
@@ -137,17 +133,8 @@ namespace Platformer
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            if (collision.CompareTag("Coin"))
+            if (collision.CompareTag("Spike") || collision.CompareTag("Enemy"))
             {
-                Destroy(collision.gameObject);
-                coins++;
-                print(coins + coins.ToString());
-            }
-
-
-            if (collision.CompareTag("Spike"))
-            {
-                print("HIT SPIKE");
                 gameoverScreen.SetActive(true);
                 Time.timeScale = 0;
                 //condition.text = "You Lose!";
